@@ -48,6 +48,26 @@ var shoppingCartApp = function () {
 		saveToLocalStorage();
 	};
 
+	var removeItem = function	(currentItem) {
+		
+		var clickedItemIndex = $(currentItem).closest('.item').index();
+	
+		total = total - cart[clickedItemIndex].price;
+		cart.splice(clickedItemIndex, 1);
+		saveToLocalStorage();
+	
+		$(currentItem.closest('.item')).remove();
+	
+
+		$('.total').html(total);
+	
+
+	
+
+		console.log(clickedItemIndex);
+		console.log(cart);
+	}
+
 	var clearCart = function () {
 		cart = [];
 		total = 0;
@@ -63,6 +83,7 @@ var shoppingCartApp = function () {
 	return {
 		loadLocalStorage: loadLocalStorage,
 		addItem: addItem,
+		removeItem: removeItem,
 		updateCart: updateCart,
 		clearCart: clearCart,
 		toggleShoppingCart: toggleShoppingCart
@@ -76,10 +97,6 @@ app.updateCart();
 $('.view-cart').on('click', function () {		
  	app.toggleShoppingCart(); 	
 });
-// $('.view-cart').on('click', function () {
-// 	// var $clickedPost = $(currentPost).closest('.post');
-// 	$('.container').find('.shopping-cart').toggleClass('show');
-// });
 
 $('.add-to-cart').on('click', function () {
   var name = $(this).closest('.card').data().name;
@@ -90,6 +107,10 @@ $('.add-to-cart').on('click', function () {
   }
   app.addItem(item);
   app.updateCart();
+});
+
+$('.cart-list').on('click', '.fa', function () {
+	app.removeItem(this);
 });
 
 $('.clear-cart').on('click', function () {

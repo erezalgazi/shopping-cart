@@ -154,7 +154,8 @@
   <script id="menu-template" type="text/x-handlebars-template">
     <div>
       {{#each cart}}
-        <p>{{name}} - ${{price}}</p>
+        <p class="item">{{name}} - ${{price}} <a href="#" class="remove-item"> <i class="fa fa-times"> </i> </a> </p>
+        <!-- <br> -->
       {{/each}}
     </div>
   </script>
