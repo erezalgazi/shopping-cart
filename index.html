@@ -151,8 +151,12 @@
     </div>
   </div>
 
-  <script id="result-template" type="text/x-handlebars-template">
-    <p>{{name}} - ${{price}}</p>
+  <script id="menu-template" type="text/x-handlebars-template">
+    <div>
+      {{#each cart}}
+        <p>{{name}} - ${{price}}</p>
+      {{/each}}
+    </div>
   </script>
   
   <script type="text/javascript" src="script.js"></script>
