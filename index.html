@@ -154,8 +154,14 @@
   <script id="menu-template" type="text/x-handlebars-template">
     <div>
       {{#each cart}}
-        <p class="item">{{name}} - ${{price}} <a href="#" class="remove-item"> <i class="fa fa-times"> </i> </a> </p>
-        <!-- <br> -->
+        {{#if isMoreThanOne}}
+          <p class="item"> 
+          <a href="#" class="remove-item"> <i class="fa fa-times"> </i> </a> {{name}}({{occurrences}}): ${{price}} <a href="#" class="increase-item"> <i class="fa fa-plus"> </i> </a> <a href="#" class="decrease-item"> <i class="fa fa-minus"> </i> </a></p>
+        {{else}}
+          <p class="item">
+          <a href="#" class="remove-item"> <i class="fa fa-times"> </i> </a> {{name}}: ${{price}} 
+          <a href="#" class="increase-item"> <i class="fa fa-plus"> </i> </a> <a href="#" class="decrease-item"> <i class="fa fa-minus"> </i> </a></p>
+        {{/if}}
       {{/each}}
     </div>
   </script>

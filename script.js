@@ -16,9 +16,6 @@ var shoppingCartApp = function () {
 		}
 	};
 	
-	// var replaced = $('.total').html().replace('0', total);
-	// $('.total').html(replaced);
-
 	var saveToLocalStorage = function () {
 		localStorage.setItem(LOCALSTORAGE_ID,JSON.stringify(cart));
 		localStorage.setItem(LOCALTOTAL_ID,JSON.stringify(total));	
@@ -37,36 +34,90 @@ var shoppingCartApp = function () {
 
 	    $('.cart-list').append(newHTML);
 	    $('.total').html(total);
-		// $('.total').html(replaced);
 	}
 
 
-	var addItem = function (item) {
-		// console.log(cart);
-	  total = total + item.price;
-		cart.push(item);
+	var addItem = function (name, price) {
+
+	  	var newItem = {
+	  	name: name,
+	  	price: price,
+	  	occurrences: 1,
+	  	isMoreThanOne: 0
+	  }
+
+	  	total = total + newItem.price;
+	  	// console.log(newItem,total);	
+	  	cart.push(newItem);
+		for (var i=0; i<(cart.length-1); i++)
+		{
+			if (cart[i].name === newItem.name)
+			{
+				// console.log(cart[i].occurrences);
+				cart[i].occurrences = cart[i].occurrences + 1;
+				// console.log(cart[i].occurrences);
+				cart[i].isMoreThanOne = 1;
+				cart.splice((cart.length-1),1);
+				// break; 	
+			}
+		}
+		 console.log(cart);
+
+	  	// item.isMoreThanOne();
 		saveToLocalStorage();
 	};
 
+	var decreaseItemByOne = function	(currentItem) {
+		var clickedItemIndex = $(currentItem).closest('.item').index();
+
+		if (cart[clickedItemIndex].occurrences === 1)
+		{
+			total = total - cart[clickedItemIndex].price;
+			cart.splice(clickedItemIndex, 1);
+			$(currentItem.closest('.item')).remove();		
+		}
+		else if (cart[clickedItemIndex].occurrences === 2)
+		{
+			total = total - cart[clickedItemIndex].price;
+			cart[clickedItemIndex].occurrences--;
+			cart[clickedItemIndex].isMoreThanOne = 0;	
+		}	
+		else {
+			total = total - cart[clickedItemIndex].price;
+			cart[clickedItemIndex].occurrences--;
+		}
+
+		saveToLocalStorage();
+		updateCart();
+	
+	
+
+		// $('.total').html(total);
+		// console.log(clickedItemIndex);
+		// console.log(cart);
+	};
 	var removeItem = function	(currentItem) {
-		
 		var clickedItemIndex = $(currentItem).closest('.item').index();
 	
-		total = total - cart[clickedItemIndex].price;
+		total = total - (cart[clickedItemIndex].price) * (cart[clickedItemIndex].occurrences);
 		cart.splice(clickedItemIndex, 1);
-		saveToLocalStorage();
-	
 		$(currentItem.closest('.item')).remove();
+		saveToLocalStorage();
+		updateCart();	
 	
 
-		$('.total').html(total);
-	
+		// $('.total').html(total);
+		// console.log(clickedItemIndex);
+		// console.log(cart);
+	};
 
-	
-
-		console.log(clickedItemIndex);
-		console.log(cart);
-	}
+	var increaseItemByOne = function (currentItem) {
+		var clickedItemIndex = $(currentItem).closest('.item').index();
+		var name = cart[clickedItemIndex].name;
+		var price = cart[clickedItemIndex].price;
+		addItem(name,price);
+		updateCart();				
+	};
 
 	var clearCart = function () {
 		cart = [];
@@ -83,10 +134,12 @@ var shoppingCartApp = function () {
 	return {
 		loadLocalStorage: loadLocalStorage,
 		addItem: addItem,
-		removeItem: removeItem,
+		decreaseItemByOne: decreaseItemByOne,
 		updateCart: updateCart,
 		clearCart: clearCart,
-		toggleShoppingCart: toggleShoppingCart
+		toggleShoppingCart: toggleShoppingCart,
+		increaseItemByOne: increaseItemByOne,
+		removeItem: removeItem
 	};
 };
 
@@ -98,24 +151,28 @@ $('.view-cart').on('click', function () {
  	app.toggleShoppingCart(); 	
 });
 
-$('.add-to-cart').on('click', function () {
+$('.add-to-cart').on('click', function () {  
   var name = $(this).closest('.card').data().name;
   var price = $(this).closest('.card').data().price; 
-  var item = {
-  	name: name,
-  	price: price
-  }
-  app.addItem(item);
+
+  // var item = $(this).closest('.card').data();
+
+  app.addItem(name, price);
   app.updateCart();
 });
 
-$('.cart-list').on('click', '.fa', function () {
+$('.cart-list').on('click', '.fa-plus', function () {
+	app.increaseItemByOne(this);
+});
+
+$('.cart-list').on('click', '.fa-minus', function () {
+	app.decreaseItemByOne(this);
+});
+
+$('.cart-list').on('click', '.fa-times', function () {
 	app.removeItem(this);
 });
 
 $('.clear-cart').on('click', function () {
   app.clearCart();
 });
-
-// update the cart as soon as the page loads!
-// updateCart();
