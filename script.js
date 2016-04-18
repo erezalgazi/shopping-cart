@@ -8,7 +8,7 @@ var shoppingCartApp = function () {
 
 	var loadLocalStorage = function () {
 		var loadCartToPage = JSON.parse(localStorage.getItem(LOCALSTORAGE_ID));
-		var loadTotalToPage = JSON.parse(localStorage.getItem(LOCALTOTAL_ID));
+		var loadTotalToPage = JSON.parse(localStorage.getItem(LOCALTOTAL_ID)); 
 		// console.log(loadStorageToPage);
 		if (loadCartToPage != null) {
 			cart = loadCartToPage;
@@ -18,7 +18,7 @@ var shoppingCartApp = function () {
 	
 	var saveToLocalStorage = function () {
 		localStorage.setItem(LOCALSTORAGE_ID,JSON.stringify(cart));
-		localStorage.setItem(LOCALTOTAL_ID,JSON.stringify(total));	
+		localStorage.setItem(LOCALTOTAL_ID,JSON.stringify(total));	 
 		// console.log(localStorage);
 	}
 
